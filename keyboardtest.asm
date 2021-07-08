@@ -27,6 +27,9 @@ start: mov ax,@data
 main_again:
 	call readkey
 	xor cx,cx
+	jz de
+	call dispc
+	call crlf
 de:
     call delay
     loop de
