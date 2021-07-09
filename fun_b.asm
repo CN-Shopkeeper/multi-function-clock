@@ -17,13 +17,15 @@ fun_b proc
 	jz fun_b_done
 ;设置闹钟功能
 set_alarm:
+	mov ax,offset set_alarm_msg
+	call dispmsg
 	xor dx,dx
 	;读入小时
 	call read2bit
 	mov dh,al
 	;比较输入的小时数，如果大于24就报错
 	cmp dh,24
-	jb alarm_input_error
+	jg alarm_input_error
 	;todo 将设置的小时数显示到数码管上
 	
 	;读入分钟

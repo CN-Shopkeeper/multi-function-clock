@@ -47,7 +47,7 @@ readkey_5:
 	call delay
 	jmp readkey_done
 readkey_nothing:
-	cmp 1,0
+	cmp al,0
 readkey_done:
 	pop di
 	pop si

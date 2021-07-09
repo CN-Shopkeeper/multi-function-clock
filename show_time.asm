@@ -16,8 +16,7 @@ show_time proc
     mov numtb[2],bh
     mov numtb[3],bl
 	xor bx,bx
-	mov ax,@data
-	mov ds,ax
+	mov cx,10
 	;------------------------------------------------8255控制字在main中设置
 	;以下均由我改写
 show_time1:
@@ -67,8 +66,7 @@ show_time1:
 	call delay
 	call clear
 
-	dec show_time_counter
-	jnz show_time1
+	loop show_time1
 
     pop ax
     pop bx

@@ -70,5 +70,3 @@ done_birthday:
 	pop si
 	ret
 play_birthday endp
-
-timer word 20

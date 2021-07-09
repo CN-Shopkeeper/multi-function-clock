@@ -6,10 +6,16 @@ include io.inc
 	pb=289h
 	pc=28ah
 	pcontroller=28bh
+	;选择器输入错误
+	chooser_error_msg byte "input error!",13,10,0
+	;数字输入错误
+	readnum_input_error_msg byte "please input a number between 0 and 9!",13,10,0
 	;音乐数据
 	include data_music.asm
 	;闹钟数据
 	include data_alarm.asm
+	;
+	include data_keyboard.asm
 .code
 start: mov ax,@data
 	mov ds,ax
@@ -91,6 +97,7 @@ main_done:
 	;键盘服务子程序
 	include readc_my.asm
 	include readkey_my.asm
+	include readnum.asm
 	;子程序选择器
 	include fun_chooser.asm
 	;扬声器子程序
@@ -104,6 +111,8 @@ main_done:
 	include fun_c.asm
 	;主程序时间显示
 	include fun_clock.asm
+	;
+	include show_time.asm
 ;延时子程序
 delay proc
 	push cx
@@ -128,7 +137,7 @@ new08h proc
 	push ds
 	mov ax,@data
 	mov dx,ax
-	dec count40
+	;dec count40
 
 	mov al,20h	;send EOI
 	out 20h,al

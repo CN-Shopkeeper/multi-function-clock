@@ -7,14 +7,11 @@
 show_mon_day proc
     push ax
     push bx
-    push cx
-    mov cx,50   ;last for a while
-month_day_again:
 ;DAY
     ;get system day
     mov al,7
     out 70h,al
-    in al 71h
+    in al,71h
     mov origin_day,al
     ;processing and show
     mov ah,0
@@ -28,7 +25,7 @@ month_deal:
     ;get system month
     mov al,8
     out 70h,al
-    in al 71h
+    in al,71h
     mov origin_mon,al
     ;processing and show
     mov ah,0
@@ -38,8 +35,6 @@ month_deal:
     call divide
 show_md:
     call show_time
-    loop month_day_again
-    pop cx
     pop bx
     pop ax
     ret
@@ -48,20 +43,18 @@ show_mon_day endp
 show_hour_min proc
     push ax
     push bx
-    push cx
 
-    mov cx,50
 hour_min_again:
 ;MINUTE
     ;get system minute
     mov al,2
     out 70h,al
-    in al 71h
-    mov origin_minute,al
+    in al,71h
+    mov origin_min,al
     ;processing and show
     mov ah,0
-    mov al,origin_minute
-    cmp origin_minute,10
+    mov al,origin_min
+    cmp origin_min,10
     jb hour_deal
     call divide
     mov bx,ax
@@ -70,7 +63,7 @@ hour_deal:
     ;get system hour
     mov al,4
     out 70h,al
-    in al 71h
+    in al,71h
     mov origin_hour,al
     ;processing and show
     mov ah,0
@@ -80,9 +73,6 @@ hour_deal:
     call divide
 show_hm:
     call show_time
-    loop hour_min_again
-
-    pop cx
     pop bx
     pop ax
     ret
@@ -96,7 +86,9 @@ show_hour_min endp
 ;输出参数ah,al
 divide proc
     push bx
-    div 10  ;无符号数除法，al=ax/10，ah=余数
+    ;------------------------------------不允许除以立即数
+    mov bl,10
+    div bl  ;无符号数除法，al=ax/10，ah=余数
     mov bl,al   ;交换，按输出要求得到结果
     mov al,ah
     mov ah,bl

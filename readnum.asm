@@ -5,9 +5,10 @@ readnum proc
 readnum_begin:
     call readc_my
     cmp al,'0'
-	jl alarm_input_error
+	jl readnum_input_error
 	cmp al,'9'
-	jb alarm_input_error
+	ja readnum_input_error
+    call dispc
 	sub al,'0'
     jmp readnum_done
 readnum_input_error:
@@ -32,5 +33,3 @@ read2bit proc
     pop bx
     ret
 read2bit endp
-
-readnum_input_error_msg byte "please input a number between 0 and 9!",13,10,0

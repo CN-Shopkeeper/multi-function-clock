@@ -11,7 +11,7 @@ fun_chooser proc
 	je go_fun_c
 	jmp chooser_input_error
 go_fun_a:
-	call fun_a
+	;call fun_a
 	jmp done
 go_fun_b:
 	call fun_b
@@ -26,5 +26,3 @@ chooser_input_error:
 done:
 	ret
 fun_chooser endp
-
-chooser_error_msg byte "input error!",13,10,0
