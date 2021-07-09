@@ -11,9 +11,8 @@ include io.inc
 .code
 start: mov ax,@data
 	mov ds,ax
-	include main_set_int.asm
 main_again:
-	call readkey
+	call readkey_my
 	;如果没有键盘输入
 	jz disp_time
 	;有键盘输入，就检查输入值
@@ -25,7 +24,7 @@ disp_time:
 	call show_hour_min
 	;todo: 判断有无闹钟，判断该时间是否为闹钟时刻
 	
-	call readkey
+	call readkey_my
 	;如果没有键盘输入
 	jz disp_date
 	;有键盘输入，就检查输入值
@@ -37,7 +36,6 @@ disp_date:
 	call show_mon_day
 	jmp main_again
 main_done:
-	include main_rec_int.asm
 	.exit 0
 	
 	;键盘中断子程序
@@ -55,10 +53,14 @@ main_done:
 ;延时子程序
 delay proc
 	push cx
-	xor cx,cx
-delay_again:
-	loop delay_again
+	push bx
+	mov bx,20
+delay1:xor cx,cx
+delay2:
+	loop delay2
+	dec bx
+	jnz delay1
+	pop bx
 	pop cx
 	ret
 delay endp
-	end start
