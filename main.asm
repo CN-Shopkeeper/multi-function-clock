@@ -1,4 +1,4 @@
-include io.inc 
+include io.inc
 .model small
 .stack
 .data
@@ -22,8 +22,9 @@ main_again:
 	call fun_chooser
 disp_time:
 	;todo: 显示时分
-	
+	call show_hour_min
 	;todo: 判断有无闹钟，判断该时间是否为闹钟时刻
+	
 	call readkey
 	;如果没有键盘输入
 	jz disp_date
@@ -33,7 +34,7 @@ disp_time:
 	call fun_chooser
 disp_date:
 	;todo 显示日期
-	
+	call show_mon_day
 	jmp main_again
 main_done:
 	include main_rec_int.asm

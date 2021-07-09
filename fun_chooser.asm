@@ -11,7 +11,7 @@ fun_chooser proc
 	je go_fun_c
 	jmp chooser_input_error
 go_fun_a:
-	;call fun_a
+	call fun_a
 	jmp done
 go_fun_b:
 	call fun_b
