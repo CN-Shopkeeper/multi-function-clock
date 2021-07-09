@@ -20,7 +20,7 @@ main_again:
 	;有键盘输入，就检查输入值
 	cmp al,'F'
 	jz main_done
-	call fun_chooser
+	call fun_chooser 
 disp_time:
 	;显示时分
 	call show_hour_min
