@@ -1,12 +1,12 @@
 fun_a proc
-;计时器，包含正计时（设置计时初值，暂停，清空），倒计时（设置计时初值，暂停计时，结束响铃）
+;计时器，包含正计时，倒计时，返回
 ;入口参数
 ;出口参数
 
-	push eax
+	push ax
     ;show menu info
 funAmenu_msg:
-    mov eax,offset fun_a_menu
+    mov ax,offset fun_a_menu
     call dispmsg
 
 choose_2_func_again:	;二级功能选择
@@ -19,7 +19,7 @@ choose_2_func_again:	;二级功能选择
     cmp al,'F'
     jz fun_a_done
     ;wrong input dealing->enter again
-	mov eax,offset wrong_input_msg
+	mov ax,offset wrong_input_msg
 	call dispmsg
     jmp choose_2_func_again
 
@@ -32,7 +32,7 @@ call_funcB_count_down:
     jmp funAmenu_msg
 
 func_a_done:
-    pop eax
+    pop ax
     ret
 fun_a endp
 
