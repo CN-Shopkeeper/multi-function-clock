@@ -18,52 +18,17 @@ fun_b proc
 ;设置闹钟功能
 set_alarm:
 	xor dx,dx
-	mov bl,10
-	;读取小时数
-	call readc_my
-	cmp al,'F'
-	jz fun_b_done
-	cmp al,'0'
-	jl alarm_input_error
-	cmp al,'9'
-	jb alarm_input_error
-	sub al,'0'
-	mul bl
+	;读入小时
+	call read2bit
 	mov dh,al
-	call readc_my
-	cmp al,'F'
-	jz fun_b_done
-	cmp al,'0'
-	jl alarm_input_error
-	cmp al,'9'
-	jb alarm_input_error
-	sub al,'0'
-	add dh,al
 	;比较输入的小时数，如果大于24就报错
 	cmp dh,24
 	jb alarm_input_error
 	;todo 将设置的小时数显示到数码管上
 	
 	;读入分钟
-	call readc_my
-	cmp al,'F'
-	jz fun_b_done
-	cmp al,'0'
-	jl alarm_input_error
-	cmp al,'9'
-	jb alarm_input_error
-	sub al,'0'
-	mul bl
+	call read2bit
 	mov dl,al
-	call readc_my
-	cmp al,'F'
-	jz fun_b_done
-	cmp al,'0'
-	jl alarm_input_error
-	cmp al,'9'
-	jb alarm_input_error
-	sub al,'0'
-	add dl,al
 	;比较输入的分钟数，如果大于59就报错
 	cmp dl,59
 	ja alarm_input_error

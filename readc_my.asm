@@ -5,9 +5,6 @@ readc_my proc
 	push cx
 	push si
 	push di
-	mov dx,pcontroller
-	mov al,10000001b
-	out dx,al
 readc_1:
 	mov dx,pc
 	mov al,0b

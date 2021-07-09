@@ -5,9 +5,6 @@ readkey_my proc
 	push cx
 	push si
 	push di
-	mov dx,pcontroller
-	mov al,10000001b
-	out dx,al
 	
 	mov dx,pc
 	mov al,0b
@@ -16,7 +13,7 @@ readkey_my proc
 	in al,dx
 	and al,00001111b
 	cmp al,00001111b
-	jz readkey_done
+	jz readkey_nothing
 	call delay
 	mov cx,4
 	mov ah,11100000b
@@ -31,7 +28,7 @@ readkey_2:
 	shl ah,1
 	add ah,10000b
 	loop readkey_2
-	jmp readkey_done
+	jmp readkey_nothing
 
 readkey_3:
 	mov si,offset ttable
@@ -44,10 +41,13 @@ readkey_4:
 	inc si
 	inc di
 	loop readkey_4
-	jmp readkey_done
+	jmp readkey_nothing
 readkey_5:
 	mov al,[di]
 	call delay
+	jmp readkey_done
+readkey_nothing:
+	cmp 1,0
 readkey_done:
 	pop di
 	pop si

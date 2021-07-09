@@ -10,7 +10,7 @@ funAmenu_msg:
     call dispmsg
 
 choose_2_func_again:	;二级功能选择
-	call readc	;出口参数al=char ascii
+	call readc_my	;出口参数al=char ascii
 	;switch to corresponding function
 	cmp al,'A'
     jz call_funcA_positive_timing

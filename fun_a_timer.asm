@@ -12,17 +12,17 @@ funA_positive_timing proc
 	mov ax,offset fun_a_pos_menu	;显示器显示菜单
 	call dispmsg
 fun_a_chooser:	;功能选择
-	call readc	;出口参数al=char ascii------------------------------------todo需要改为从小键盘读取
+	call readc_my	;出口参数al=char ascii
 	;switch to corresponding function
 check_key_again:
 	cmp al,'A'
 	;start positive timing
-	jz start_timing
+	jz a_start_timing
 	cmp al,'B'
 	;pause/continue
-	jz pause_timing
+	jz a_pause_timing
 	cmp al,'C'
-	jz return_zero
+	jz a_return_zero
 	cmp al,'F'
 	;return
 	jz positive_timing_done
@@ -32,30 +32,33 @@ check_key_again:
 	jmp fun_a_chooser
 a_start_timing:
 	call init_counter1	;初始化计数器1
-	fun_posi_again:
+fun_posi_again:
 	call fun_posi		;正计时并显示时间
 	;检测键盘是否有按键，若无继续正计时显示时间
-	call readkey
-	jz fun_posi_again
+	call readkey_my
+	;--------------------------------------------------这里是jnz表示没有键盘输入
+	jnz fun_posi_again
 	jmp check_key_again
 a_pause_timing:
 	;循环显示now_time
 	mov ax,now_time[0]
 	mov bx,now_time[1]
-	pause_timing_again:
+pause_timing_again:
 	call show_time
-	call readkey
-	jz pause_timing_again
+	call readkey_my
+	;--------------------------------------------------这里是jnz表示没有键盘输入
+	jnz pause_timing_again
 	jmp check_key_again
-return_zero:
+a_return_zero:
 	mov ax,0
 	mov bx,0
 	mov now_time[0],0
 	mov now_time[1],0
-	return_zero_again:
+return_zero_again:
 	call show_time
-	call readkey
-	jz return_zero_again
+	call readkey_my
+	;--------------------------------------------------这里是jnz表示没有键盘输入
+	jnz return_zero_again
 	jmp check_key_again
 positive_timing_done:
 	pop bx
@@ -73,7 +76,7 @@ funB_count_down proc
 	mov ax,offset fun_a_neg_menu
 	call dispmsg
 fun_b_chooser:
-	call readc	;出口参数al=char ascii			----------------todo改为从4×4小键盘读取
+	call readc_my	;出口参数al=char ascii
 	;switch to corresponding function
 	cmp al,'A'
 	jz b_start_timing
@@ -87,20 +90,22 @@ fun_b_chooser:
 	jmp fun_b_chooser
 b_start_timing:
 	call init_counter1	;初始化计数器1
-	fun_posi_again:
+fun_posi_again:
 	call fun_posi		;正计时并显示时间
 	;检测键盘是否有按键，若无继续正计时显示时间
-	call readkey
-	jz fun_posi_again
+	;--------------------------------------------------这里是jnz表示没有键盘输入
+	call readkey_my
+	jnz fun_posi_again
 	jmp check_key_again
 b_pause_timing:
 	;循环显示now_time
 	mov ax,now_time[0]
 	mov bx,now_time[1]
-	pause_timing_again:
+pause_timing_again:
 	call show_time
-	call readkey
-	jz pause_timing_again
+	call readkey_my
+	;--------------------------------------------------这里是jnz表示没有键盘输入
+	jnz pause_timing_again
 	jmp check_key_again
 neg_timing_done:
 	pop ax
@@ -108,31 +113,10 @@ neg_timing_done:
 funB_count_down endp
 
 
-
-
-
-
-
+	;--------------------------------------------------将中断设置和恢复，中断子程序都放到了main里面
+	;无限产生一秒钟的信号，你真狠啊。。。不过这个不是严格的一秒时间，因为计时一秒后还有其它的操作
 fun_posi proc
-	mov dx,3508h
-	int 21h
-	push es
-	push bx
-
-	cli
-	push ds
-	mov ax,seg new08h
-	mov ds,ax
-	mov kdx,offset new08h
-	mov ax,2508h
-	int 21h
-	pop ds
-	in al,21h
-	push ax
-	and al,0feh
-	out 21h,al
 	mov count40,40
-	sti
 	;主程序
 unreach40_again:
 	cmp count40,0
@@ -152,38 +136,12 @@ keep_5959:
 	mov bx,now_time[1]
 	call show_time
 fun_posi_done:
-	cli
-	pop ax
-	out 21h,al
-	pop dx
-	pop ds
-	mov ax,2508h
-	int 21h
-	sti
 	ret
 fun_posi endp
 
-
+;--------------------------------------------------将中断设置和恢复，中断子程序都放到了main里面
 fun_neg proc
-	mov dx,3508h
-	int 21h
-	push es
-	push bx
-
-	cli
-	push ds
-	mov ax,seg new08h
-	mov ds,ax
-	mov kdx,offset new08h
-	mov ax,2508h
-	int 21h
-	pop ds
-	in al,21h
-	push ax
-	and al,0feh
-	out 21h,al
 	mov count40,40
-	sti
 	;主程序
 unreach40_again:
 	cmp count40,0
@@ -202,37 +160,11 @@ keep_0000:
 	mov ax,now_time[0]
 	mov bx,now_time[1]
 	call show_time	;但是有个问题，数码管不会一直显示，一旦CPU去处理响铃子程序数码管就不显示了
-	;todo call 响铃		--------------------------------------------------------------
+	call play_alarm
 	;call 按键停止响铃，屏幕显示当前菜单，跳转到子功能
 fun_neg_done:
-	cli
-	pop ax
-	out 21h,al
-	pop dx
-	pop ds
-	mov ax,2508h
-	int 21h
-	sti
 	ret
 fun_neg endp
-
-new08h proc
-	;每40次中断时间counter-1
-	sti
-	push ax
-	push dx
-	push ds
-	mov ax,@data
-	mov dx,ax
-	dec count40
-
-	mov al,20h	;send EOI
-	out 20h,al
-	pop ds
-	pop dx
-	pop ax
-	iret
-new08h endp
 
 ;ps:某人不要吐槽我的弱智加减法
 ;只对now_time进行修改,结果保存到now_time
@@ -371,7 +303,8 @@ check_minute:
 	;读取分钟
 	mov ax, offset fun_a_timing_min_msg
 	call dispmsg
-	readuib	;输入无符号十进制整数，出口参数Al=8位	-----------------------------todo需要改为从小键盘输入
+	;使用我写的read2bit来实现
+	call read2bit
 	cmp al,60
 	jae check_minute
 	mov bh,al;存储分钟数
@@ -379,7 +312,8 @@ check_second:
 	;读取秒
 	mov ax,offset fun_a_timing_sec_msg
 	call dispmsg
-	readuib
+	;使用我写的read2bit来实现
+	call read2bit
 	cmp al,60
 	jae check_second
 	mov bl,al;存储秒数
