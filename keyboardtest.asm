@@ -4,6 +4,8 @@ include io.inc
 .data
     pa=288h
 	pb=289h
+	pc=28ah
+	pcontroller=28bh
 .code
 start: mov ax,@data
 	mov ds,ax

@@ -8,7 +8,7 @@ fun_b proc
 	mov ax,offset alarm_start_msg
 	call dispmsg
 	;输入分支选择
-	call readc
+	call readc_my
 	cmp al,'A'
 	jz set_alarm
 	cmp al,'B'
@@ -20,7 +20,7 @@ set_alarm:
 	xor dx,dx
 	mov bl,10
 	;读取小时数
-	call readc
+	call readc_my
 	cmp al,'F'
 	jz fun_b_done
 	cmp al,'0'
@@ -30,7 +30,7 @@ set_alarm:
 	sub al,'0'
 	mul bl
 	mov dh,al
-	call readc
+	call readc_my
 	cmp al,'F'
 	jz fun_b_done
 	cmp al,'0'
@@ -45,7 +45,7 @@ set_alarm:
 	;todo 将设置的小时数显示到数码管上
 	
 	;读入分钟
-	call readc
+	call readc_my
 	cmp al,'F'
 	jz fun_b_done
 	cmp al,'0'
@@ -55,7 +55,7 @@ set_alarm:
 	sub al,'0'
 	mul bl
 	mov dl,al
-	call readc
+	call readc_my
 	cmp al,'F'
 	jz fun_b_done
 	cmp al,'0'
