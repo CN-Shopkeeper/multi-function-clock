@@ -1,9 +1,9 @@
 ;计时器，包含正计时（设置时钟初值，暂停，清空），倒计时（设置时钟初值，暂停/开始，结束响铃）
-;入口参数
-;出口参数
-now_time byte 2 dup(?);[0]存分，[1]存秒
 
-;正向计时
+now_time byte 2 dup(?);[0]存分，[1]存秒
+count40 byte 40
+
+;子功能A：正向计时
 funA_positive_timing proc
 	push ax
 	push bx
@@ -12,7 +12,7 @@ funA_positive_timing proc
 	mov ax,offset fun_a_pos_menu	;显示器显示菜单
 	call dispmsg
 fun_a_chooser:	;功能选择
-	call readc	;出口参数al=char ascii------------------------------------需要改为从小键盘读取
+	call readc	;出口参数al=char ascii------------------------------------todo需要改为从小键盘读取
 	;switch to corresponding function
 check_key_again:
 	cmp al,'A'
@@ -22,7 +22,7 @@ check_key_again:
 	;pause/continue
 	jz pause_timing
 	cmp al,'C'
-	jz returnZero
+	jz return_zero
 	cmp al,'F'
 	;return
 	jz positive_timing_done
@@ -30,7 +30,7 @@ check_key_again:
 	mov ax,offset prompt_msg
 	call dispmsg
 	jmp fun_a_chooser
-start_timing:
+a_start_timing:
 	call init_counter1	;初始化计数器1
 	fun_posi_again:
 	call fun_posi		;正计时并显示时间
@@ -38,7 +38,7 @@ start_timing:
 	call readkey
 	jz fun_posi_again
 	jmp check_key_again
-pause_timing:
+a_pause_timing:
 	;循环显示now_time
 	mov ax,now_time[0]
 	mov bx,now_time[1]
@@ -47,15 +47,15 @@ pause_timing:
 	call readkey
 	jz pause_timing_again
 	jmp check_key_again
-returnZero:
+return_zero:
 	mov ax,0
 	mov bx,0
 	mov now_time[0],0
 	mov now_time[1],0
-	returnZero_again:
+	return_zero_again:
 	call show_time
 	call readkey
-	jz returnZero_again
+	jz return_zero_again
 	jmp check_key_again
 positive_timing_done:
 	pop bx
@@ -66,22 +66,43 @@ funA_positive_timing endp
 
 
 
-;倒计时
+;子功能B：倒计时
 funB_count_down proc
 	push ax
-	;先让用户设置计数初值
+	;先让用户设置倒计时计数初值
 	mov ax,offset fun_a_neg_menu
 	call dispmsg
-choose_2_funB:
-call readc	;出口参数al=char ascii
+fun_b_chooser:
+	call readc	;出口参数al=char ascii			----------------todo改为从4×4小键盘读取
 	;switch to corresponding function
 	cmp al,'A'
-	jz funA_positive_timing
+	jz b_start_timing
 	cmp al,'B'
-	jz funB_count_down	;wrong input dealing
+	jz b_pause_timing
+	cmp al,'F'				;若要想退出时数码管不显示，可以调用clear子程序
+	jmp neg_timing_done
+	;wrong input dealing
 	mov ax,offset prompt_msg
 	call dispmsg
-	jmp choose_2_funA
+	jmp fun_b_chooser
+b_start_timing:
+	call init_counter1	;初始化计数器1
+	fun_posi_again:
+	call fun_posi		;正计时并显示时间
+	;检测键盘是否有按键，若无继续正计时显示时间
+	call readkey
+	jz fun_posi_again
+	jmp check_key_again
+b_pause_timing:
+	;循环显示now_time
+	mov ax,now_time[0]
+	mov bx,now_time[1]
+	pause_timing_again:
+	call show_time
+	call readkey
+	jz pause_timing_again
+	jmp check_key_again
+neg_timing_done:
 	pop ax
     ret
 funB_count_down endp
@@ -123,7 +144,7 @@ unreach40_again:
 	cmp now_time[1],01011001b	;秒为59
 	;分秒都已经达到最大59
 	jz keep_5959
-	call sub1_clock
+	call add1_clock
 	call show_time
 	jz fun_posi_done
 keep_5959:
@@ -174,7 +195,7 @@ unreach40_again:
 	cmp now_time[1],0	;秒为0
 	;分秒都已经达00.00
 	jz keep_0000
-	call add1_clock
+	call sub1_clock
 	call show_time
 	jz fun_neg_done
 keep_0000:
@@ -196,7 +217,7 @@ fun_neg_done:
 fun_neg endp
 
 new08h proc
-	;每40次中断时间-1/+1
+	;每40次中断时间counter-1
 	sti
 	push ax
 	push dx
@@ -204,23 +225,17 @@ new08h proc
 	mov ax,@data
 	mov dx,ax
 	dec count40
-	;cmp count40,0
-	;jnz new08h_done
-	;让谁-1/+1呢？
-	;add change_value	;变化量++
-	;mov count40,40		;恢复40
-;new08h_done:
-	mov al,20h
-	out 20h,al	;send EOI
+
+	mov al,20h	;send EOI
+	out 20h,al
 	pop ds
 	pop dx
 	pop ax
 	iret
 new08h endp
 
-count40 byte 40
-
-;只对now_time进行修改
+;ps:某人不要吐槽我的弱智加减法
+;只对now_time进行修改,结果保存到now_time
 sub1_clock proc
 	push ax
 	push bx
@@ -273,6 +288,8 @@ sub1_done:
 	ret
 sub1_clock endp
 
+
+;只对now_time进行修改,结果保存到now_time
 add1_clock proc
 push ax
 	push bx
