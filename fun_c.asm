@@ -4,7 +4,7 @@ fun_c proc
 test_music:
 	mov ax,offset test_music_msg
 	call dispmsg
-	call readc
+	call readc_my
 	cmp al,'0'
 	jz test_music_0
 	cmp al,'1'
@@ -25,7 +25,7 @@ test_music_2:
 confirm_music:
 	mov ax,offset confirm_music_msg
 	call dispmsg
-	call readc
+	call readc_my
 	cmp al,'A'
 	jz use_it
 	cmp al,'B'
