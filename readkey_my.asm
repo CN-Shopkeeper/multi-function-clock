@@ -1,6 +1,6 @@
 	;键盘按键检测子程序readkey
     ;如果有按键，zf为0，al为按键输入的字符
-readc_my proc
+readkey_my proc
 	push dx
 	push cx
 	push si
@@ -54,5 +54,5 @@ readkey_done:
 	pop cx
 	pop dx
 	ret
-readc_my endp
+readkey_my endp
 	

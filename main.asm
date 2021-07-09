@@ -4,6 +4,8 @@ include io.inc
 .data
 	pa=288h
 	pb=289h
+	pc=28ah
+	pcontroller=28bh
 	;音乐数据
 	include data_music.asm
 	;闹钟数据
@@ -20,10 +22,23 @@ main_again:
 	jz main_done
 	call fun_chooser
 disp_time:
-	;todo: 显示时分
+	;显示时分
 	call show_hour_min
-	;todo: 判断有无闹钟，判断该时间是否为闹钟时刻
-	
+	;判断有无闹钟，判断该时间是否为闹钟时刻
+	cmp alarm_flag,0
+	jz continue_disp
+	;有闹钟
+	mov al,origin_hour
+	;比较小时数
+	cmp alarm_hour,al
+	jnz continue_disp
+	mov al,origin_min
+	;比较分钟数
+	cmp alarm_minu,al
+	jnz continue_disp
+	;当前时间为闹钟时间播放响铃
+	call play_alarm
+continue_disp:	
 	call readkey_my
 	;如果没有键盘输入
 	jz disp_date
@@ -38,8 +53,9 @@ disp_date:
 main_done:
 	.exit 0
 	
-	;键盘中断子程序
-	include keyboard_int.asm
+	;键盘服务子程序
+	include readc_my.asm
+	include readkey_my.asm
 	;子程序选择器
 	include fun_chooser.asm
 	;扬声器子程序
@@ -64,3 +80,5 @@ delay2:
 	pop cx
 	ret
 delay endp
+
+end start
