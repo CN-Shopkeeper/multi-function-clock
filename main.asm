@@ -185,23 +185,4 @@ has_alarm_done:
 	ret
 has_alarm endp
 
-;响应计数器1的中断
-new08h proc
-	;每40次中断时间counter-1
-	sti
-	push ax
-	push dx
-	push ds
-	mov ax,@data
-	mov dx,ax
-	;dec count40
-
-	mov al,20h	;send EOI
-	out 20h,al
-	pop ds
-	pop dx
-	pop ax
-	iret
-new08h endp
-
 end start

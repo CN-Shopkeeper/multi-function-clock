@@ -34,13 +34,6 @@ a_start_timing:
 	call readkey_my	;如果没有键盘输入则持续显示时间
 	jnz a_start_timing_again
 	jmp a_check_key_again
-fun_posi_again:
-	mov count_flag,1
-	call sec_to_minsec
-	;检测键盘是否有按键，若无继续正计时显示时间
-	call readkey_my
-	jnz fun_posi_again
-	jmp a_check_key_again
 a_pause_timing:
 	;循环显示now_time
 	mov count_flag,0
