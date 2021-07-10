@@ -1,5 +1,5 @@
 	;键盘按键检测子程序readkey
-    ;如果有按键，zf为0，al为按键输入的字符
+    ;如果有按键，zf为1，al为按键输入的字符
 readkey_my proc
 	push dx
 	push cx
@@ -47,7 +47,7 @@ readkey_5:
 	call delay
 	jmp readkey_done
 readkey_nothing:
-	cmp al,0
+	cmp al,0	;zf=0
 readkey_done:
 	pop di
 	pop si

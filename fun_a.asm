@@ -10,9 +10,9 @@ funAmenu_msg:
 choose_2_func_again:
 	call readc_my	;出口参数al=char
 	cmp al,'A'
-    jz call_funcA_positive_timing
+    jz call_fun_a_posi
 	cmp al,'B'
-	jz call_funcB_count_down
+	jz call_fun_a_neg
     cmp al,'F'
     jz fun_a_done
     ;wrong input dealing->enter again
@@ -21,11 +21,11 @@ choose_2_func_again:
     jmp choose_2_func_again
 
 
-call_funcA_positive_timing:
-    call funcA_positive_timing
+call_fun_a_posi:
+    call fun_a_posi
     jmp funAmenu_msg    ;这种结构可以做到子程序返回上一级时显示上一级菜单
-call_funcB_count_down:
-    call call_funcB_count_down
+call_fun_b_neg:
+    call fun_a_neg
     jmp funAmenu_msg
 
 func_a_done:

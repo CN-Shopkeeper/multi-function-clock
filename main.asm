@@ -21,24 +21,24 @@ include io.inc
 .code
 start: mov ax,@data
 	mov ds,ax
-	;设置08h号中断
-	;mov dx,3508h
-	;int 21h
-	;push es
-	;push bx
-	;cli
-	;push ds
-	;mov ax,seg new08h
-	;mov ds,ax
-	;mov kdx,offset new08h
-	;mov ax,2508h
-	;int 21h
-	;pop ds
-	;in al,21h
-	;push ax
-	;and al,0feh
-	;out 21h,al
-	;sti
+	;设置0bh号中断,IRQ3
+	mov dx,350bh
+	int 21h
+	push es
+	push bx
+	cli
+	push ds
+	mov ax,seg clock_interrupt
+	mov ds,ax
+	mov ax,offset clock_interrupt
+	mov ax,250bh
+	int 21h
+	pop ds
+	in al,21h
+	push ax
+	and al,11110111b	;IRQ3
+	out 21h,al
+	sti
 
 	;设置8255并行端口控制字
 	mov dx,pcontroller
@@ -85,17 +85,17 @@ disp_date:
 	loop main_date
 	jmp main_again
 main_done:
-	;恢复08h号中断
-	;cli
-	;pop ax
-	;out 21h,al
-	;pop dx
-	;pop ds
-	;mov ax,2508h
-	;int 21h
-	;sti
+	;恢复0bh号中断
+	cli
+	pop ax
+	out 21h,al
+	pop dx
+	pop ds
+	mov ax,250bh
+	int 21h
+	sti
 	.exit 0
-	
+
 	;键盘服务子程序
 	include readc_my.asm
 	include readkey_my.asm

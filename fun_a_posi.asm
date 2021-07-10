@@ -1,6 +1,5 @@
-;计时器，包含正计时（设置时钟初值，暂停，清空）
-;子功能A：正向计时
-funA_positive_timing proc
+;正计时（设置时钟初值，暂停，清空）
+fun_a_posi proc
 	push ax
 	push bx
 	;先让用户设置计数初值
@@ -8,9 +7,9 @@ funA_positive_timing proc
 	mov ax,offset fun_a_pos_menu	;显示器显示菜单
 	call dispmsg
 fun_a_chooser:	;功能选择
-	call readc_my	;出口参数al=char ascii
+	call readc_my	;出口参数al
 	;switch to corresponding function
-check_key_again:
+a_check_key_again:
 	cmp al,'A'
 	;start positive timing
 	jz a_start_timing
@@ -27,37 +26,40 @@ check_key_again:
 	call dispmsg
 	jmp fun_a_chooser
 a_start_timing:
-	call init_counter1	;初始化计数器1
+	mov count_flag,1
+	call init_counter	;初始化计数器,启动计时
+	a_start_timing_again:
+	call sec_to_minsec
+	call show_time
+	call readkey_my	;如果没有键盘输入则持续显示时间
+	jnz a_start_timing_again
+	jmp a_check_key_again
 fun_posi_again:
-	call fun_posi		;正计时并显示时间
+	mov count_flag,1
+	call sec_to_minsec
 	;检测键盘是否有按键，若无继续正计时显示时间
 	call readkey_my
-	;--------------------------------------------------这里是jnz表示没有键盘输入
 	jnz fun_posi_again
-	jmp check_key_again
+	jmp a_check_key_again
 a_pause_timing:
 	;循环显示now_time
-	mov ax,now_time[0]
-	mov bx,now_time[1]
-pause_timing_again:
-	call show_time
+	mov count_flag,0
+	a_pause_timing_again:
+	call sec_to_minsec
 	call readkey_my
-	;--------------------------------------------------这里是jnz表示没有键盘输入
-	jnz pause_timing_again
-	jmp check_key_again
+	jnz a_pause_timing_again
+	jmp a_check_key_again
 a_return_zero:
-	mov ax,0
-	mov bx,0
-	mov now_time[0],0
-	mov now_time[1],0
-return_zero_again:
+	mov now_time,0
+	mov count_flag,0
+	return_zero_again:
+	call sec_to_minsec
 	call show_time
 	call readkey_my
-	;--------------------------------------------------这里是jnz表示没有键盘输入
 	jnz return_zero_again
 	jmp check_key_again
 positive_timing_done:
 	pop bx
 	pop ax
     ret
-funA_positive_timing endp
+fun_a_posi endp

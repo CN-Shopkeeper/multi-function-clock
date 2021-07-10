@@ -46,211 +46,31 @@ sec_to_minsec proc
 sec_to_minsec endp
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	;--------------------------------------------------将中断设置和恢复，中断子程序都放到了main里面
-	;无限产生一秒钟的信号，你真狠啊。。。不过这个不是严格的一秒时间，因为计时一秒后还有其它的操作
-fun_posi proc
-	mov count40,40
-	;主程序
-unreach40_again:
-	cmp count40,0
-	ja unreach40_again
-	;一旦减为0，则变化时钟显示
-	;判断当前时间是否为59.59
-	cmp now_time[0],01011001b	;分59
-	jnz next1
-	cmp now_time[1],01011001b	;秒为59
-	;分秒都已经达到最大59
-	jz keep_5959
-	call add1_clock
-	call show_time
-	jz fun_posi_done
-keep_5959:
-	mov ax,now_time[0]
-	mov bx,now_time[1]
-	call show_time
-fun_posi_done:
-	ret
-fun_posi endp
-
-;--------------------------------------------------将中断设置和恢复，中断子程序都放到了main里面
-fun_neg proc
-	mov count40,40
-	;主程序
-unreach40_again:
-	cmp count40,0
-	ja unreach40_again
-	;一旦减为0，则变化时钟显示
-	;判断当前时间是否为00.00
-	cmp now_time[0],0	;分为0
-	jnz next1
-	cmp now_time[1],0	;秒为0
-	;分秒都已经达00.00
-	jz keep_0000
-	call sub1_clock
-	call show_time
-	jz fun_neg_done
-keep_0000:
-	mov ax,now_time[0]
-	mov bx,now_time[1]
-	call show_time	;但是有个问题，数码管不会一直显示，一旦CPU去处理响铃子程序数码管就不显示了
-	call play_alarm
-	;call 按键停止响铃，屏幕显示当前菜单，跳转到子功能
-fun_neg_done:
-	ret
-fun_neg endp
-
-;ps:某人不要吐槽我的弱智加减法
-;只对now_time进行修改,结果保存到now_time
-sub1_clock proc
-	push ax
-	push bx
-	;若为00.00则不做变化
-	cmp now_time[1],0	;秒不为0
-	jnz sub1
-	cmp now_time[0],0
-	jz sub1_done		;分秒皆为0
-sub1:
-	;把时间拆分到ah,al,bh,bl内
-	mov ax,now_time[0]
-	mov bx,now_time[1]
-	;秒个位
-	cmp bl,0
-	jz sub_bh
-	sub bl,1
-	mov now_time[1],bx
-	jz sub1_done
-	;秒十位
-sub_bh:
-	cmp bh,0
-	jz sub_al
-	sub bh,1
-	mov bl,9
-	mov now_time[1],bx
-	jz sub1_done
-	;分个位
-sub_al:
-	cmp al,0
-	jz sub_ah
-	sub al,1
-	mov bh,5
-	mov bl,9
-	mov now_time[0],ax
-	mov now_time[1],bx
-	jz sub1_done
-	;分十位
-sub_ah:
-	cmp ah,0
-	jz sub1_done	;为00.00
-	sub ah,1
-	mov al,9
-	mov bh,5
-	mov bl,9
-	mov now_time[0],ax
-	mov now_time[1],bx
-sub1_done:
-	pop bx
-	pop ax
-	ret
-sub1_clock endp
-
-
-;只对now_time进行修改,结果保存到now_time
-add1_clock proc
-push ax
-	push bx
-	;若为59.59则不做变化
-	cmp now_time[1],01011001b	;秒不为59
-	jnz add1
-	cmp now_time[0],01011001b	;分不为59
-	jz add1_done		;分秒皆为59
-add1:
-	;把时间拆分到ah,al,bh,bl内
-	mov ax,now_time[0]
-	mov bx,now_time[1]
-	;秒个位
-	cmp bl,9
-	jz add_bh
-	add bl,1
-	mov now_time[1],bx
-	jz add1_done
-	;秒十位
-add_bh:
-	cmp bh,5
-	jz add_al
-	add bh,1
-	mov bl,0
-	mov now_time[1],bx
-	jz add1_done
-	;分个位
-add_al:
-	cmp al,9
-	jz add_ah
-	add al,1
-	mov now_time[0],ax
-	mov now_time[1],0
-	jz add1_done
-	;分十位
-add_ah:
-	cmp ah,5
-	jz add1_done
-	add ah,1
-	mov al,0
-	mov now_time[0],ax
-	mov now_time[1],0
-add1_done:
-	pop bx
-	pop ax
-	ret
-add1_clock endp
-
-
-
-;设置8254计数器1每25ms产生一次中断
-;CLK1接1M HZ时钟频率
-;计数初值40000
-init_counter1 proc
+;设置8254计数器1、计数器2每1s产生一次中断
+;CLK1接1M HZ时钟频率，CLK2接OUT1
+;计数初值1000
+init_counter proc
 	push dx
 	push ax
-	mov dx,控制端口地址
-	mov al,01110101b	;计数器1，工作方式2，10进制
+	mov dx,countercontroller
+	mov al,01110100b	;计数器1，工作方式2，2进制
 	out dx,al
-	mov dx,计数器1端口地址
-	mov ax,40000	;写入计数初值
+	mov al,10110100b	;计数器2，工作方式2，2进制
+	out dx,al
+	mov dx,counter1
+	mov ax,1000	;写入计数初值
+	out dx,al
+	mov al,ah
+	out dx,al
+	mov dx,counter2
+	mov ax,1000	;写入计数初值
 	out dx,al
 	mov al,ah
 	out dx,al
 	pop ax
 	pop dx
 	ret
-init_counter1 endp
+init_counter endp
 
 ;设置计时初值，并显示一小段时间
 init_val proc
@@ -268,7 +88,7 @@ check_minute:
 	call read2bit
 	cmp al,60
 	jae check_minute
-	mov bh,al;存储分钟数
+	mov bh,al	;save min
 check_second:
 	;读取秒
 	mov ax,offset fun_a_timing_sec_msg
@@ -277,29 +97,26 @@ check_second:
 	call read2bit
 	cmp al,60
 	jae check_second
-	mov bl,al;存储秒数
+	mov bl,al	;save sec
 	mov ax,offset YN
 	call dispmsg
-	call readuib	;输入无符号十进制整数AL			---------------------------todo需要改为从小键盘输入
-	cmp al,1	;输入1则显示到数码管			-------------------todo改为字符'1'
-	jz show_init_time
+	call readc_my
+	cmp al,1	;输入1则显示到数码管
+	jz show_init_time	;bh: min bl: sec
 	;输入0则让用户重新输入
 	jmp check_time
 show_init_time:
-	mov ah,0
+	xor ax,ax
 	mov al,bh
-	call divide
-	push ax	;栈暂存分钟数据
-	mov ah,0
-	mov al,bl
-	call divide
-	push ax	;栈保存秒数据
-	pop bx	;秒放在bx
-	pop ax	;分放在ax
-	call show_time	;调用子程序在数码管上显示计时初值
-	mov now_time[0],ax		;一定要更新到now_time
-	mov now_time[1],bx
+	mov bh,60
+	mul bh
+	and bx,0fh
+	add ax,bx
+	mov now_time,ax	;更新计时初值到now_time
+	call sec_to_minsec;-------------------------------------------------------------这两个也可以放在计时子程序
+	call show_time	;调用子程序在数码管上显示计时初值---------------------------------
 	pop bx
 	pop ax
 	ret
 init_val endp
+
