@@ -30,7 +30,7 @@ clock_interrupt_done:
 	iret
 clock_interrupt endp
 
-;秒转化为分秒，入口参数now_time，返回到ax,bx！！！！！！！！！！！！调用前需要先保护ax,bx的内容！！！！！！！！！！！！
+;秒转化为分秒，入口参数now_time，返回到ax,bx！！调用前需要先保护ax,bx的内容
 sec_to_minsec proc
 	mov ax,now_time
 	mov bl,60
