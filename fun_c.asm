@@ -18,9 +18,11 @@ test_music_0:
 	jmp confirm_music
 test_music_1:
 	mov dl,1	;暂存选择
+	call play_blackteam
 	jmp confirm_music
 test_music_2:
 	mov dl,2	;暂存选择
+	call play_sky
 	jmp confirm_music
 confirm_music:
 	mov ax,offset confirm_music_msg
@@ -45,34 +47,89 @@ fun_c_done:
 	ret
 fun_c endp
 
+;播放生日歌
 play_birthday proc ;HappyBirthDay 音频播放
 	push si
     push bx
 	push ax
-	push dx ;
 	push cx
     mov si,offset birthday
-    mov bx,0
+    mov bx,12
 again_birthday:
-    mov ax,[si+bx]			;定义在数据段的音符（计数初值）
-    mov cx ,[si+bx+2]		;自定义延时
-	mov dx ,[si+bx+4]		;音符对应的1~7，显示灯光
-    mov timer,cx
-    cmp bx,144				;定义的数据的长
-    ja done_birthday
+    mov ax,[si]			;定义在数据段的音符（计数初值）
+	add si,2
+    mov cx ,[si]		;自定义延时
+	add si,2
 	call speaker
 	call speakon
-    add bx,6				;每6个字节一个音符，延时，灯光（1~7）
-    mov ah,0bh ;中断判断是否键盘有输入，没有输入al 00h
-    int 21h
-    cmp al,00h
-    jz again_birthday
+play_birthday_again:
+	call delay_clock
+	loop play_birthday_again
+	sub bx,1
+    jnz play_birthday_again
 done_birthday:
 	call speakoff
 	pop cx
-	pop dx
 	pop ax
 	pop bx
 	pop si
 	ret
 play_birthday endp
+
+;播放blackteam
+play_blackteam proc ;blackteam 音频播放
+	push si
+    push bx
+	push ax
+	push cx
+    mov si,offset blackteam
+    mov bx,12
+again_blackteam:
+    mov ax,[si]			;定义在数据段的音符（计数初值）
+	add si,2
+    mov cx ,[si]		;自定义延时
+	add si,2
+	call speaker
+	call speakon
+play_blackteam_again:
+	call delay_clock
+	loop play_blackteam_again
+	sub bx,1
+    jnz play_blackteam_again
+done_blackteam:
+	call speakoff
+	pop cx
+	pop ax
+	pop bx
+	pop si
+	ret
+play_blackteam endp
+
+;播放sky
+play_sky proc ;sky 音频播放
+	push si
+    push bx
+	push ax
+	push cx
+    mov si,offset sky
+    mov bx,12
+again_sky:
+    mov ax,[si]			;定义在数据段的音符（计数初值）
+	add si,2
+    mov cx ,[si]		;自定义延时
+	add si,2
+	call speaker
+	call speakon
+play_sky_again:
+	call delay_clock
+	loop play_sky_again
+	sub bx,1
+    jnz play_sky_again
+done_sky:
+	call speakoff
+	pop cx
+	pop ax
+	pop bx
+	pop si
+	ret
+play_sky endp

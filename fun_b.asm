@@ -64,9 +64,18 @@ fun_b endp
 ;used_music表示选择的铃声
 play_alarm proc
 	cmp used_music,0
-	je play_birthday
+	je play_alarm_birthday
 	cmp used_music,1
-	je play_birthday
-	jmp play_birthday
+	je play_alarm_blackteam
+	jmp play_alarm_sky
+play_alarm_birthday:
+	call play_birthday
+	jmp play_alarm_done
+play_alarm_blackteam:
+	call play_birthday
+	jmp play_alarm_done
+play_alarm_sky:
+	call play_sky
+play_alarm_done:
 	ret
 play_alarm endp
