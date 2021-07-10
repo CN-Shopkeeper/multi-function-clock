@@ -115,6 +115,8 @@ main_done:
 	include fun_clock.asm
 	;
 	include show_time.asm
+	;
+	include data_fun_a.asm
 ;延时子程序
 delay proc
 	push cx

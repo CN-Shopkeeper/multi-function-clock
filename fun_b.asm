@@ -24,7 +24,7 @@ set_alarm:
 	call read2bit
 	mov dh,al
 	;比较输入的小时数，如果大于24就报错
-	cmp dh,24
+	cmp dh,23
 	jg alarm_input_error
 	;todo 将设置的小时数显示到数码管上
 	

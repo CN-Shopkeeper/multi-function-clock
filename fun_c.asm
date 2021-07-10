@@ -112,7 +112,7 @@ play_sky proc ;sky 音频播放
 	push ax
 	push cx
     mov si,offset sky
-    mov bx,12
+    mov bx,7
 again_sky:
     mov ax,[si]			;定义在数据段的音符（计数初值）
 	add si,2

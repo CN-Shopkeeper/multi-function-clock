@@ -55,8 +55,6 @@ hour_deal:
 show_hour_min endp
 
 
-
-
 ;将1个两位数分解为2个一位数
 ;输入参数ax
 ;输出参数ah,al
