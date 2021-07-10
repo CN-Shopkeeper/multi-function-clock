@@ -5,7 +5,7 @@ confirm_music_msg byte 13,10,"use this music? YES(A)/NO(B)",0,10,10
 ;提示音乐设置成功
 music_used_msg byte 13,10,"music used!",13,10,0
 ;提示取消设置音乐
-music_not_used_msg btye 13,10,"back to main function",13,10,0
+music_not_used_msg byte 13,10,"back to main function",13,10,0
 ;系统使用的音乐，默认是0
 used_music byte 0
 birthday word 1000000/392,105,1000000/392,105,1000000/440,210,1000000/392,210,1000000/524,210,1000000/494,420

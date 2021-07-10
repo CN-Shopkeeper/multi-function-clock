@@ -22,12 +22,11 @@ a_check_key_again:
 	;return
 	jz positive_timing_done
 	;other：choose again
-	mov ax,offset prompt_msg
+	mov ax,offset wrong_input_msg
 	call dispmsg
 	jmp fun_a_chooser
 a_start_timing:
 	mov count_flag,1
-	call init_counter	;初始化计数器,启动计时
 	a_start_timing_again:
 	call sec_to_minsec
 	call show_time
@@ -50,7 +49,7 @@ a_return_zero:
 	call show_time
 	call readkey_my
 	jnz return_zero_again
-	jmp check_key_again
+	jmp a_check_key_again
 positive_timing_done:
 	pop bx
 	pop ax

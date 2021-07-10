@@ -35,7 +35,7 @@ confirm_music:
 	jmp confirm_music
 use_it:
 	mov used_music,dl
-	moc ax,offset music_used_msg
+	mov ax,offset music_used_msg
 	call dispmsg
 	jmp fun_c_done
 not_use:
@@ -66,7 +66,7 @@ play_birthday_again:
 	call delay_clock
 	loop play_birthday_again
 	sub bx,1
-    jnz play_birthday_again
+    jnz again_birthday
 done_birthday:
 	call speakoff
 	pop cx
@@ -95,7 +95,7 @@ play_blackteam_again:
 	call delay_clock
 	loop play_blackteam_again
 	sub bx,1
-    jnz play_blackteam_again
+    jnz again_blackteam
 done_blackteam:
 	call speakoff
 	pop cx
@@ -124,7 +124,7 @@ play_sky_again:
 	call delay_clock
 	loop play_sky_again
 	sub bx,1
-    jnz play_sky_again
+    jnz again_sky
 done_sky:
 	call speakoff
 	pop cx
