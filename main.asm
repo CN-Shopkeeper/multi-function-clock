@@ -2,10 +2,16 @@ include io.inc
 .model small
 .stack
 .data
+	;8255端口
 	pa=288h
 	pb=289h
 	pc=28ah
 	pcontroller=28bh
+	;8254端口
+	counter0=280h
+	counter1=281h
+	counter2=282h
+	countercontroller=283h
 	;选择器输入错误
 	chooser_error_msg byte "input error!",13,10,0
 	;数字输入错误
