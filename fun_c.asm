@@ -33,7 +33,13 @@ confirm_music:
 	jmp confirm_music
 use_it:
 	mov used_music,dl
+	moc ax,offset music_used_msg
+	call dispmsg
+	jmp fun_c_done
 not_use:
+	mov ax,offset music_not_used_msg
+	call dispmsg
+fun_c_done:
 	pop dx
 	pop ax
 	ret

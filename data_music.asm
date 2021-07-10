@@ -1,7 +1,11 @@
 ;预览音乐的提示
-test_music_msg byte "input 0 to test music birthday",13,10,"input 1 to test music blackteam",13,10,"input 2 to test music sky",13,10,0
+test_music_msg byte 13,10,"input 0 to test music birthday",13,10,"input 1 to test music blackteam",13,10,"input 2 to test music sky",13,10,0
 ;提示是否使用这个音乐
-confirm_music_msg byte "use this music? YES(A)/NO(B)",0,10,10
+confirm_music_msg byte 13,10,"use this music? YES(A)/NO(B)",0,10,10
+;提示音乐设置成功
+music_used_msg byte 13,10,"music used!",13,10,0
+;提示取消设置音乐
+music_not_used_msg btye 13,10,"back to main function",13,10,0
 ;系统使用的音乐，默认是0
 used_music byte 0
 birthday word 1000000/392,105,5,1000000/392,105,5,1000000/440,210,6,1000000/392,210,5,1000000/524,210,1,1000000/494,420,7

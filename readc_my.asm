@@ -15,7 +15,6 @@ readc_1:
 	cmp al,00001111b
 	jz readc_1
 	call delay
-	call dispcrlf
 	mov cx,4
 	mov ah,11100000b
 readc_2:
@@ -45,6 +44,7 @@ readc_4:
 	jmp readc_1
 readc_5:
 	mov al,[di]
+	call dispc
 	call delay
 
 	pop di

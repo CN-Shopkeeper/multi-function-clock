@@ -8,7 +8,6 @@ readnum_begin:
 	jl readnum_input_error
 	cmp al,'9'
 	ja readnum_input_error
-    call dispc
 	sub al,'0'
     jmp readnum_done
 readnum_input_error:

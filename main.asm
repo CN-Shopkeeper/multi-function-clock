@@ -16,6 +16,8 @@ include io.inc
 	include data_alarm.asm
 	;
 	include data_keyboard.asm
+	;
+	include data_led.asm
 .code
 start: mov ax,@data
 	mov ds,ax
@@ -46,6 +48,8 @@ start: mov ax,@data
 	;C端口：用于读取简易键盘
 	out dx,al
 main_again:
+	mov cx,10
+main_time:
 	call readkey_my
 	;如果没有键盘输入
 	jnz disp_time
@@ -60,17 +64,14 @@ disp_time:
 	cmp alarm_flag,0
 	jz continue_disp
 	;有闹钟
-	mov al,origin_hour
-	;比较小时数
-	cmp alarm_hour,al
+	call has_alarm
 	jnz continue_disp
-	mov al,origin_min
-	;比较分钟数
-	cmp alarm_minu,al
-	jnz continue_disp
-	;当前时间为闹钟时间播放响铃
 	call play_alarm
 continue_disp:	
+	loop main_time
+
+	mov cx,10
+main_date:
 	call readkey_my
 	;如果没有键盘输入
 	jnz disp_date
@@ -79,8 +80,9 @@ continue_disp:
 	jz main_done
 	call fun_chooser
 disp_date:
-	;todo 显示日期
+	;显示日期
 	call show_mon_day
+	loop main_date
 	jmp main_again
 main_done:
 	;恢复08h号中断
@@ -127,6 +129,53 @@ delay2:
 	pop cx
 	ret
 delay endp
+
+;延时子程序
+delay_clock proc
+	push cx
+	xor cx,cx
+delay_clock1:
+	loop delay_clock1
+	pop cx
+	ret
+delay endp
+
+;判断现在是否是闹钟时间
+has_alarm proc
+	push ax
+	push bx
+
+	xor ax,ax
+	mov al,2
+    out 70h,al
+    in al,71h
+	mov bl,16
+    div bl  ;无符号数除法，al=ax/10，ah=余数
+	mov bh,ah	;保存ah中的余数
+	mov bl,10	;al扩大十倍
+	mul bl
+	add al,bh	;al相加得到原十进制数字
+	cmp al,alarm_minu
+	;如果不相同就退出，zf=1
+	jnz has_alarm_done
+
+	xor ax,ax
+	mov al,4
+    out 70h,al
+    in al,71h
+	mov bl,16
+    div bl  ;无符号数除法，al=ax/10，ah=余数
+	mov bh,ah	;保存ah中的余数
+	mov bl,10	;al扩大十倍
+	mul bl
+	add al,bh	;al相加得到原十进制数字
+	cmp al,alarm_hour
+
+has_alarm_done:
+	pop bx
+	pop ax
+	ret
+has_alarm endp
 
 ;响应计数器1的中断
 new08h proc
