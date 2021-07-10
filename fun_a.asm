@@ -1,17 +1,14 @@
-fun_a proc
 ;计时器，包含正计时，倒计时，返回
-;入口参数
-;出口参数
-
+fun_a proc
 	push ax
+
     ;show menu info
 funAmenu_msg:
     mov ax,offset fun_a_menu
     call dispmsg
 
-choose_2_func_again:	;二级功能选择
-	call readc_my	;出口参数al=char ascii
-	;switch to corresponding function
+choose_2_func_again:
+	call readc_my	;出口参数al=char
 	cmp al,'A'
     jz call_funcA_positive_timing
 	cmp al,'B'

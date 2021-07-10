@@ -5,7 +5,7 @@ readkey_my proc
 	push cx
 	push si
 	push di
-	
+
 	mov dx,pc
 	mov al,0b
 	out dx,al
@@ -55,4 +55,3 @@ readkey_done:
 	pop dx
 	ret
 readkey_my endp
-	

@@ -30,7 +30,6 @@ show_hour_min proc
     push ax
     push bx
 
-    
 ;MINUTE
     ;get system minute
     xor ax,ax
@@ -62,7 +61,7 @@ divide proc
     push bx
     ;------------------------------------不允许除以立即数
     mov bl,16
-    div bl  ;无符号数除法，al=ax/10，ah=余数
+    div bl  ;无符号数除法，al=ax/16，ah=余数
     xchg al,ah
     pop bx
     ret
