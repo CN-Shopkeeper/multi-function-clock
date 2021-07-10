@@ -16,12 +16,16 @@ clock_interrupt proc
 	jz posi_timing
 	;2 倒计时
 	cmp now_time,0	;00:00
-	jz stop_neg
+	jz count_flag0
 	sub now_time,1
+	jmp clock_interrupt_done
 posi_timing:
 	cmp now_time,3599	;59:59
-	jz posi_max
+	jz count_flag0
 	add now_time,1
+	jmp clock_interrupt_done
+count_flag0:
+	mov count_flag,0
 clock_interrupt_done:
 	mov al,20h	;send EOI
 	out 20h,al
@@ -101,20 +105,20 @@ check_second:
 	mov ax,offset YN
 	call dispmsg
 	call readc_my
-	cmp al,1	;输入1则显示到数码管
+	cmp al,'1'	;输入1则显示到数码管
 	jz show_init_time	;bh: min bl: sec
 	;输入0则让用户重新输入
 	jmp check_time
 show_init_time:
-	xor ax,ax
+	xor ax,ax	;ax=bh*60+bl
 	mov al,bh
 	mov bh,60
 	mul bh
 	and bx,0fh
 	add ax,bx
 	mov now_time,ax	;更新计时初值到now_time
-	call sec_to_minsec;-------------------------------------------------------------这两个也可以放在计时子程序
-	call show_time	;调用子程序在数码管上显示计时初值---------------------------------
+	;call sec_to_minsec;-------------------------------------------------------------这两个也可以放在计时子程序
+	;call show_time	;调用子程序在数码管上显示计时初值---------------------------------
 	pop bx
 	pop ax
 	ret
