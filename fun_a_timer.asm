@@ -1,8 +1,6 @@
 ;now_time byte 2 dup(?);[0]存分，[1]存秒
 ;count40 byte 40
 
-now_time word ?
-count_flag byte 0	;记录状态信息，0表示无操作，1表示正计时状态，2表示倒计时状态
 
 clock_interrupt proc
 	sti
@@ -59,12 +57,14 @@ init_counter proc
 	mov dx,countercontroller
 	mov al,01110100b	;计数器1，工作方式2，2进制
 	out dx,al
-	mov al,10110100b	;计数器2，工作方式2，2进制
-	out dx,al
 	mov dx,counter1
 	mov ax,1000	;写入计数初值
 	out dx,al
 	mov al,ah
+	out dx,al
+
+	mov dx,countercontroller
+	mov al,10110100b	;计数器2，工作方式2，2进制
 	out dx,al
 	mov dx,counter2
 	mov ax,1000	;写入计数初值
@@ -108,7 +108,7 @@ check_second:
 	cmp al,'1'	;输入1则显示到数码管
 	jz show_init_time	;bh: min bl: sec
 	;输入0则让用户重新输入
-	jmp check_time
+	jmp check_minute
 show_init_time:
 	xor ax,ax	;ax=bh*60+bl
 	mov al,bh

@@ -17,12 +17,11 @@ b_check_key_again:
 	cmp al,'F'				;若要想退出时数码管不显示，可以调用clear子程序
 	jmp neg_timing_done
 	;wrong input dealing
-	mov ax,offset prompt_msg
+	mov ax,offset wrong_input_msg
 	call dispmsg
 	jmp fun_b_chooser
 b_start_timing:
 	mov count_flag,2
-	call init_counter	;初始化计数器,启动计时
 	b_start_timing_again:
 	call sec_to_minsec
 	call show_time

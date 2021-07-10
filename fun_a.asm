@@ -24,11 +24,11 @@ choose_2_func_again:
 call_fun_a_posi:
     call fun_a_posi
     jmp funAmenu_msg    ;这种结构可以做到子程序返回上一级时显示上一级菜单
-call_fun_b_neg:
+call_fun_a_neg:
     call fun_a_neg
     jmp funAmenu_msg
 
-func_a_done:
+fun_a_done:
     pop ax
     ret
 fun_a endp

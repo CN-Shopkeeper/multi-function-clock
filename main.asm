@@ -12,6 +12,8 @@ include io.inc
 	counter1=281h
 	counter2=282h
 	countercontroller=283h
+	now_time word ?
+	count_flag byte 0	;记录状态信息，0表示无操作，1表示正计时状态，2表示倒计时状态
 	;选择器输入错误
 	chooser_error_msg byte "input error!",13,10,0
 	;数字输入错误
@@ -24,11 +26,13 @@ include io.inc
 	include data_keyboard.asm
 	;
 	include data_led.asm
+	;
+	include data_fun_a.asm
 .code
 start: mov ax,@data
 	mov ds,ax
 	;设置0bh号中断,IRQ3
-	mov dx,350bh
+	mov ax,350bh
 	int 21h
 	push es
 	push bx
@@ -36,7 +40,7 @@ start: mov ax,@data
 	push ds
 	mov ax,seg clock_interrupt
 	mov ds,ax
-	mov ax,offset clock_interrupt
+	mov dx,offset clock_interrupt
 	mov ax,250bh
 	int 21h
 	pop ds
@@ -46,6 +50,8 @@ start: mov ax,@data
 	out 21h,al
 	sti
 
+	call init_counter	;初始化计数器,启动计时
+	
 	;设置8255并行端口控制字
 	mov dx,pcontroller
 	mov al,10000001b
@@ -53,6 +59,7 @@ start: mov ax,@data
 	;B端口：用于
 	;C端口：用于读取简易键盘
 	out dx,al
+	
 main_again:
 	mov cx,10
 main_time:
@@ -111,8 +118,10 @@ main_done:
 	;扬声器子程序
 	include speaker.asm
 	;功能A，计时器
-	;include fun_a.asm
-	;include fun_a_timer.asm
+	include fun_a.asm
+	include fun_a_neg.asm
+	include fun_a_posi.asm
+	include fun_a_timer.asm
 	;功能B，闹钟
 	include fun_b.asm
 	;功能C，铃声设置
@@ -121,8 +130,6 @@ main_done:
 	include fun_clock.asm
 	;
 	include show_time.asm
-	;
-	include data_fun_a.asm
 ;延时子程序
 delay proc
 	push cx
@@ -146,7 +153,7 @@ delay_clock1:
 	loop delay_clock1
 	pop cx
 	ret
-delay endp
+delay_clock endp
 
 ;判断现在是否是闹钟时间
 has_alarm proc
