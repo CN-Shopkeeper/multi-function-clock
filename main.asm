@@ -23,7 +23,11 @@ include io.inc
 	;数字输入错误
 	readnum_input_error_msg byte 13,10,"please input a number between 0 and 9!",13,10,0
 	;功能选择器提示
-	fun_chooser_msg byte 13,10,"press A to set counter!",13,10,"press B to set alarm!",13,10,"press C to set music!",13,10,0
+	fun_chooser_msg byte 13,10,30 dup('*'),13,10
+		byte "*    press A to set counter!    *",13,10
+		byte "*    press B to set alarm!      *",13,10
+		byte "*    press C to set music!      *",13,10
+		byte 13,10,30 dup('*'),13,10,0
 	;音乐数据
 	include data_music.asm
 	;闹钟数据
