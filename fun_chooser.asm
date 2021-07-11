@@ -24,5 +24,7 @@ chooser_input_error:
 	mov ax,offset chooser_error_msg
 	call dispmsg
 done:
+	mov ax,offset fun_chooser_msg
+	call dispmsg
 	ret
 fun_chooser endp
