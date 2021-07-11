@@ -16,12 +16,12 @@ fun_a_pos_menu byte 13,10,30 dup('*'),13,10
     byte '*     A.start/pause positive timing   *',13,10
     byte '*     B.return to ZERO                *',13,10
     byte '*     F.return                        *',13,10
-    byte 13,10, dup('*'),13,10,0
+    byte 30 dup('*'),13,10,0
 
 ;倒计时设置计时初值后的菜单信息
-fun_a_neg_menu byte 13,10, dup('*'),13,10
+fun_a_neg_menu byte 13,10, 30 dup('*'),13,10
     byte 'A.start/pause countdown',13,10
     byte 'F.return',13,10
-    byte 13,10, dup('*'),13,10,0
+    byte 30 dup('*'),13,10,0
 
 YN byte 13,10,'Yes(A)/No(B)?:',13,10,0
