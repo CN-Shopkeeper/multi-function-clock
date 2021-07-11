@@ -65,8 +65,6 @@ fun_b endp
 ;播放当前设置的闹钟铃声
 ;used_music表示选择的铃声
 play_alarm proc
-	;取消闹钟
-	mov alarm_flag,0
 	;判断铃声
 	cmp used_music,0
 	je play_alarm_birthday

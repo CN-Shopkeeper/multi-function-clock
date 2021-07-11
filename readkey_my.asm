@@ -44,6 +44,7 @@ readkey_4:
 	jmp readkey_nothing
 readkey_5:
 	mov al,[di]
+	call dispc
 	call delay
 	jmp readkey_done
 readkey_nothing:
