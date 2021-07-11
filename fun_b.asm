@@ -75,7 +75,7 @@ play_alarm_birthday:
 	call play_birthday
 	jmp play_alarm_done
 play_alarm_blackteam:
-	call play_birthday
+	call play_blackteam
 	jmp play_alarm_done
 play_alarm_sky:
 	call play_sky

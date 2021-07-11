@@ -53,6 +53,7 @@ play_birthday proc ;HappyBirthDay 音频播放
     push bx
 	push ax
 	push cx
+	push dx
     mov si,offset birthday
     mov bx,12
 again_birthday:
@@ -69,6 +70,7 @@ play_birthday_again:
     jnz again_birthday
 done_birthday:
 	call speakoff
+	pop dx
 	pop cx
 	pop ax
 	pop bx
@@ -82,6 +84,7 @@ play_blackteam proc ;blackteam 音频播放
     push bx
 	push ax
 	push cx
+	push dx
     mov si,offset blackteam
     mov bx,12
 again_blackteam:
@@ -98,6 +101,7 @@ play_blackteam_again:
     jnz again_blackteam
 done_blackteam:
 	call speakoff
+	pop dx
 	pop cx
 	pop ax
 	pop bx
@@ -111,6 +115,7 @@ play_sky proc ;sky 音频播放
     push bx
 	push ax
 	push cx
+	push dx
     mov si,offset sky
     mov bx,7
 again_sky:
@@ -127,6 +132,7 @@ play_sky_again:
     jnz again_sky
 done_sky:
 	call speakoff
+	pop dx
 	pop cx
 	pop ax
 	pop bx
