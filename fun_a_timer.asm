@@ -56,7 +56,7 @@ sec_to_minsec proc
 	xor bx,bx
 	mov bl,al	;min
 	mov al,ah	;sec
-	and ax,0fh	;sec
+	and ax,0ffh	;sec
 	call divide_10
 	xchg ax,bx	;ax: min bx: sec
 	call divide_10
@@ -71,7 +71,7 @@ init_counter proc
 	push dx
 	push ax
 	mov dx,countercontroller
-	mov al,01110100b	;计数器1，工作方式2，2进制
+	mov al,01110110b	;计数器1，工作方式3，2进制
 	out dx,al
 	mov dx,counter1
 	mov ax,1000	;写入计数初值
@@ -80,7 +80,7 @@ init_counter proc
 	out dx,al
 
 	mov dx,countercontroller
-	mov al,10110100b	;计数器2，工作方式2，2进制
+	mov al,10110110b	;计数器2，工作方式3，2进制
 	out dx,al
 	mov dx,counter2
 	mov ax,1000	;写入计数初值

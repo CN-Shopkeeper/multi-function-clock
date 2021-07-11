@@ -3,7 +3,8 @@ fun_a_posi proc
 	push ax
 	push bx
 	;先让用户设置计数初值
-	call init_val		;设置并显示计时初值（todo只能显示一小段时间，若要持续显示须改进）
+	call init_val		;设置并显示计时初值
+fun_a_menu:
 	mov ax,offset fun_a_pos_menu	;显示器显示菜单
 	call dispmsg
 fun_a_chooser:	;功能选择
@@ -14,9 +15,6 @@ a_check_key_again:
 	;start positive timing
 	jz a_start_timing
 	cmp al,'B'
-	;pause/continue
-	jz a_pause_timing
-	cmp al,'C'
 	jz a_return_zero
 	cmp al,'F'
 	;return
@@ -24,22 +22,19 @@ a_check_key_again:
 	;other：choose again
 	mov ax,offset wrong_input_msg
 	call dispmsg
-	jmp fun_a_chooser
+	jmp fun_a_menu
 a_start_timing:
+	cmp count_flag,0
+	jz count_flag_set1	;若初始count_flag为0则置1
+	mov count_flag,0	;若初始count_flag为1则置0
+	jmp a_start_timing_again
+	count_flag_set1:
 	mov count_flag,1
 	a_start_timing_again:
 	call sec_to_minsec
 	call show_time
 	call readkey_my	;如果没有键盘输入则持续显示时间
 	jnz a_start_timing_again
-	jmp a_check_key_again
-a_pause_timing:
-	;循环显示now_time
-	mov count_flag,0
-	a_pause_timing_again:
-	call sec_to_minsec
-	call readkey_my
-	jnz a_pause_timing_again
 	jmp a_check_key_again
 a_return_zero:
 	mov now_time,0
