@@ -5,6 +5,7 @@ fun_b proc
 	push ax
 	push bx
 	push dx
+fun_b_begin:
 	mov ax,offset alarm_start_msg
 	call dispmsg
 	;输入分支选择
@@ -15,6 +16,7 @@ fun_b proc
 	jz cancel_alarm
 	cmp al,'F'
 	jz fun_b_done
+	jmp fun_b_begin
 ;设置闹钟功能
 set_alarm:
 	mov ax,offset set_alarm_msg
