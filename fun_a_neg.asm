@@ -28,10 +28,15 @@ b_start_timing:
 	b_start_timing_again:
 	call sec_to_minsec
 	call show_time
+	cmp now_time,0
+	jz fun_a_neg_play_alarm
 	call readkey_my	;如果没有键盘输入则持续显示时间
 	jnz b_start_timing_again
 	jmp b_check_key_again	;有输入则检查功能
+fun_a_neg_play_alarm:
+	call play_alarm
 neg_timing_done:
+	mov count_flag,0
 	pop bx
 	pop ax
     ret
