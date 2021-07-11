@@ -14,6 +14,10 @@ include io.inc
 	countercontroller=283h
 	now_time word ?
 	count_flag byte 0	;记录状态信息，0表示无操作，1表示正计时状态，2表示倒计时状态
+	;时钟时间的分钟
+	clock_minu byte ?
+	;时钟时间的秒
+	clock_sec byte ?
 	;选择器输入错误
 	chooser_error_msg byte "input error!",13,10,0
 	;数字输入错误
@@ -49,6 +53,21 @@ start: mov ax,@data
 	and al,11110111b	;IRQ3
 	out 21h,al
 	sti
+
+	;初始化时钟的分钟
+	xor ax,ax
+    mov al,2
+    out 70h,al
+    in al,71h
+    mov bl,16
+    div bl
+	mov bh,ah
+	mov bl,10
+	mul bl
+	add al,bh
+	mov clock_minu,al
+	;初始化时钟的秒
+	mov clock_sec,0
 
 	call init_counter	;初始化计数器,启动计时
 	
@@ -161,15 +180,7 @@ has_alarm proc
 	push bx
 
 	xor ax,ax
-	mov al,2
-    out 70h,al
-    in al,71h
-	mov bl,16
-    div bl  ;无符号数除法，al=ax/10，ah=余数
-	mov bh,ah	;保存ah中的余数
-	mov bl,10	;al扩大十倍
-	mul bl
-	add al,bh	;al相加得到原十进制数字
+	mov al,clock_minu
 	cmp al,alarm_minu
 	;如果不相同就退出，zf=1
 	jnz has_alarm_done

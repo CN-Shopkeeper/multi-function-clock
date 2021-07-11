@@ -8,6 +8,7 @@ clock_interrupt proc
 	push ax
 	mov ax,@data
 	mov ds,ax
+	call update_clock_minu
 	cmp count_flag,0	;0则无操作
 	jz clock_interrupt_done
 	cmp count_flag,1	;1正计时
@@ -31,6 +32,19 @@ clock_interrupt_done:
 	pop ds
 	iret
 clock_interrupt endp
+
+update_clock_minu proc
+	inc clock_sec
+	cmp clock_sec,60
+	jnz update_clock_minu_done
+	mov clock_sec,0
+	inc clock_minu
+	cmp clock_minu,60
+	jnz update_clock_minu_done
+	mov clock_minu,0
+update_clock_minu_done:
+	ret
+update_clock_minu endp
 
 ;秒转化为分秒，入口参数now_time，返回到ax,bx！！！！！！！！！！！！调用前需要先保护ax,bx的内容！！！！！！！！！！！！
 sec_to_minsec proc
