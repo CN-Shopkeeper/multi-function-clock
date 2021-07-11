@@ -18,6 +18,7 @@ show_time1:
 	mov al,10000000b
 	mov dx,pa
 	out dx,al
+	call delay_clock
 	mov bl,numtb[0]
 	mov al,ledtb[bx]
 	mov dx,pb
@@ -28,6 +29,7 @@ show_time1:
 	mov al,01000000b
 	mov dx,pa
 	out dx,al
+	call delay_clock
 	mov bl,numtb[1]
 	mov al,ledtb_point[bx]	;显示al，需要显示小数点
 	mov dx,pb
@@ -39,6 +41,7 @@ show_time1:
 	mov al,00100000b
 	mov dx,pa
 	out dx,al
+	call delay_clock
 	mov bl,numtb[2]
 	mov al,ledtb[bx]	;显示bh
 	mov dx,pb
@@ -49,6 +52,7 @@ show_time1:
 	mov al,00010000b
 	mov dx,pa
 	out dx,al
+	call delay_clock
 	mov bl,numtb[3]
 	mov al,ledtb[bx]	;显示bl
 	mov dx,pb

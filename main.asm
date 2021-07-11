@@ -98,6 +98,8 @@ disp_time:
 	;有闹钟
 	call has_alarm
 	jnz continue_disp
+	;取消闹钟
+	mov alarm_flag,0
 	call play_alarm
 continue_disp:	
 	loop main_time
