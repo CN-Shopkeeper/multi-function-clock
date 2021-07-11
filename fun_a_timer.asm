@@ -57,9 +57,9 @@ sec_to_minsec proc
 	mov bl,al	;min
 	mov al,ah	;sec
 	and ax,0fh	;sec
-	call divide
+	call divide_10
 	xchg ax,bx	;ax: min bx: sec
-	call divide
+	call divide_10
 	ret
 sec_to_minsec endp
 
