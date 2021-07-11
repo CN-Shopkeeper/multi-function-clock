@@ -18,6 +18,9 @@ readnum_done:
     ret
 readnum endp
 
+;从简易键盘读取一个两位数
+;调用readnum，错误处理交给readnum
+;结果保存在al
 read2bit proc
     push bx
     mov bl,10

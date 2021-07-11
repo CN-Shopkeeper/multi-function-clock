@@ -3,6 +3,7 @@
 ;输入B进入闹钟设置功能
 ;输入C进入铃声选择功能
 fun_chooser proc
+	;直接判断已经读取在al的字符
 	cmp al,'A'
 	je go_fun_a
 	cmp al,'B'
@@ -24,6 +25,7 @@ chooser_input_error:
 	mov ax,offset chooser_error_msg
 	call dispmsg
 done:
+	;子程序执行结束，打印主程序的提示信息
 	mov ax,offset fun_chooser_msg
 	call dispmsg
 	ret

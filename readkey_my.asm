@@ -1,5 +1,6 @@
 	;键盘按键检测子程序readkey
     ;如果有按键，zf为1，al为按键输入的字符
+	;流程与readc_my相同
 readkey_my proc
 	push dx
 	push cx

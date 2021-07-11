@@ -1,11 +1,13 @@
 ;闹钟功能
-;输入A以设置闹钟，闹钟的时间将存储在暂存DX中，当数值合法时，alarm_flag为1，表示有闹钟设置成功，闹钟时间存在内存变量alarm_hour和alarm_minu中
+;输入A以设置闹钟，闹钟的时间将存储在暂存DX中，
+;当数值合法时，alarm_flag为1，表示有闹钟设置成功，闹钟时间存在内存变量alarm_hour和alarm_minu中
 ;输入B以取消闹钟，直接将alarm_flag设置为0即可
 fun_b proc
 	push ax
 	push bx
 	push dx
 fun_b_begin:
+	;输出提示信息
 	mov ax,offset alarm_start_msg
 	call dispmsg
 	;输入分支选择
@@ -45,12 +47,14 @@ set_alarm:
 	mov ax,offset alarm_success_msg
 	call dispmsg
 	jmp fun_b_done
+;输入的数字超出了时钟的范围
 alarm_input_error:
 	mov ax,offset alarm_input_error_msg
 	call dispmsg
 	jmp fun_b_done
 ;取消闹钟功能
 cancel_alarm:
+	;将标志位设置为0
 	mov alarm_flag,0
 	mov ax,offset alarm_cancel_msg
 	call dispmsg
@@ -71,6 +75,7 @@ play_alarm proc
 	cmp used_music,1
 	je play_alarm_blackteam
 	jmp play_alarm_sky
+	;播放铃声
 play_alarm_birthday:
 	call play_birthday
 	jmp play_alarm_done
