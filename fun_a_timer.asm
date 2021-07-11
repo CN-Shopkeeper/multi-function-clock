@@ -121,9 +121,9 @@ check_second:
 	mov ax,offset YN
 	call dispmsg
 	call readc_my
-	cmp al,'1'	;输入1则显示到数码管
+	cmp al,'A'	;输入A则显示到数码管
 	jz show_init_time	;bh: min bl: sec
-	;输入0则让用户重新输入
+	;输入B则让用户重新输入
 	jmp check_minute
 show_init_time:
 	xor ax,ax	;ax=bh*60+bl
