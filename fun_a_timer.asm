@@ -15,12 +15,14 @@ clock_interrupt proc
 	;2 倒计时
 	cmp now_time,0	;00:00
 	jz count_flag0
-	sub now_time,1
+	;sub now_time,1
+	dec now_time
 	jmp clock_interrupt_done
 posi_timing:
 	cmp now_time,3599	;59:59
 	jz count_flag0
-	add now_time,1
+	;add now_time,1
+	inc now_time
 	jmp clock_interrupt_done
 count_flag0:
 	mov count_flag,0
@@ -114,7 +116,7 @@ show_init_time:
 	mov al,bh
 	mov bh,60
 	mul bh
-	and bx,0fh
+	and bx,0ffh
 	add ax,bx
 	mov now_time,ax	;更新计时初值到now_time
 	;call sec_to_minsec;-------------------------------------------------------------这两个也可以放在计时子程序

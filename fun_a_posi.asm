@@ -29,7 +29,10 @@ a_start_timing:
 	mov count_flag,1
 	a_start_timing_again:
 	call sec_to_minsec
-	call show_time
+	;call show_time
+	call dispuiw
+	mov ax,bx
+	call dispuiw
 	call readkey_my	;如果没有键盘输入则持续显示时间
 	jnz a_start_timing_again
 	jmp a_check_key_again
