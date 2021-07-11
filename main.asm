@@ -22,6 +22,8 @@ include io.inc
 	chooser_error_msg byte "input error!",13,10,0
 	;数字输入错误
 	readnum_input_error_msg byte "please input a number between 0 and 9!",13,10,0
+	;功能选择器提示
+	fun_chooser_msg byte "press A to set counter!",13,10,"press B to set alarm!",13,10,"press C to set music!",13,10,0
 	;音乐数据
 	include data_music.asm
 	;闹钟数据
@@ -79,6 +81,8 @@ start: mov ax,@data
 	;C端口：用于读取简易键盘
 	out dx,al
 	
+	mov ax,offset fun_chooser_msg
+	call dispmsg
 main_again:
 	mov cx,10
 main_time:
