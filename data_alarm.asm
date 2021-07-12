@@ -5,9 +5,11 @@ alarm_minu byte 0
 ;存储是否设置了闹钟
 alarm_flag byte 0
 ;进入闹钟功能时的提示
-alarm_start_msg byte 13,10,"input A to set or modify the alarm!",13,10
+alarm_start_msg byte 13,10,35 dup('*'),13,10
+    byte "input A to set or modify the alarm!",13,10
     byte "input B to cancel the alarm",13,10
-    byte "input F to quit",13,10,0
+    byte "input F to quit",13,10
+    byte 35 dup('*'),13,10,0
 ;设置闹钟提示输入小时和分钟
 set_alarm_msg byte 13,10,"input 4 numbers",13,10,0
 ;设置闹钟成功后的提示
