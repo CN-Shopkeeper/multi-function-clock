@@ -33,6 +33,9 @@ posi_count_flag_set1:
 posi_start_timing_again:
 	call sec_to_minsec
 	call show_time
+	mov al,bl
+	call dispuib
+	call delay
 	call readkey_my	;如果没有键盘输入则持续显示时间
 	jnz posi_start_timing_again
 	jmp posi_check_key_again
@@ -42,6 +45,7 @@ posi_return_zero:
 	return_zero_again:
 	call sec_to_minsec
 	call show_time
+	call delay
 	call readkey_my
 	jnz return_zero_again
 	jmp posi_check_key_again

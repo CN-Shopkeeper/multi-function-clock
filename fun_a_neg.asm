@@ -28,6 +28,9 @@ neg_start_timing:
 	neg_start_timing_again:
 	call sec_to_minsec
 	call show_time
+	mov al,bl
+	call dispuib
+	call delay
 	cmp now_time,0
 	jz fun_a_neg_play_alarm
 	call readkey_my	;如果没有键盘输入则持续显示时间

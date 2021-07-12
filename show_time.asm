@@ -77,6 +77,7 @@ clear proc
 	out dx,al
 	mov dx,288h
 	out dx,al
+	call delay_clock
 	ret
 clear endp
 
