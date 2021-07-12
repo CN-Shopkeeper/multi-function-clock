@@ -104,6 +104,7 @@ start: mov ax,@data
 	mov ax,offset fun_chooser_msg
 	call dispmsg
 main_again:
+	call delay
 	;显示十次当前时间
 	mov cx,10
 main_time:
@@ -113,7 +114,7 @@ main_time:
 	;有键盘输入，就检查输入值
 	cmp al,'F'
 	jz main_done
-	call fun_chooser 
+	call fun_chooser
 disp_time:
 	;显示时分
 	call show_hour_min
@@ -126,9 +127,9 @@ disp_time:
 	;取消闹钟
 	mov alarm_flag,0
 	call play_alarm
-continue_disp:	
+continue_disp:
 	loop main_time
-
+	call delay
 	;显示10次当前日期
 	mov cx,10
 main_date:
