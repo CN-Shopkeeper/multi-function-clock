@@ -10,6 +10,21 @@ fun_b_begin:
 	;输出提示信息
 	mov ax,offset alarm_start_msg
 	call dispmsg
+	cmp alarm_flag,0
+	jz msg_no_alarm
+	mov ax,offset has_alarm_msg
+	call dispmsg
+	mov al,alarm_hour
+	call dispuib
+	mov al,':'
+	call dispc
+	mov al,alarm_minu
+	call dispuib
+	jmp fun_b_chooser
+msg_no_alarm:
+	mov ax,offset no_alarm_msg
+	call dispmsg
+fun_b_chooser:	
 	;输入分支选择
 	call readc_my
 	cmp al,'A'

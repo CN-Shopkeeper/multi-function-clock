@@ -10,7 +10,7 @@ readkey_my proc
 	mov dx,pc
 	mov al,0b
 	out dx,al
-	call delay
+	call delay_clock
 	in al,dx
 	and al,00001111b
 	cmp al,00001111b
@@ -22,7 +22,7 @@ readkey_2:
 	mov al,ah
 	out dx,al
 	in al,dx
-	call delay
+	call delay_clock
 	and al,00001111b
 	cmp al,00001111b
 	jnz readkey_3
