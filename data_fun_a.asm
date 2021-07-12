@@ -5,7 +5,7 @@ fun_a_menu byte 13,10,30 dup('*'),13,10
     byte '*     A.positive timing     *',13,10
     byte '*     B.countdown           *',13,10
     byte '*     F.return              *',13,10
-    byte 13,10, dup('*'),13,10,0
+    byte 13,10, 30 dup('*'),13,10,0
 ;提示设置计时初值
 fun_a_timing_msg byte 13,10,'please set initial minute and second :',13,10,0
 fun_a_timing_min_msg byte 13,10,'Input minute(<60):',13,10,0
