@@ -1,20 +1,24 @@
-
 	;键盘输入子程序readc
+	;出口参数al，输入字符的ascii
 readc_my proc
 	push dx
 	push cx
 	push si
 	push di
+	;扫描键盘，判断是否有按键输入
 readc_1:
 	mov dx,pc
-	mov al,0b
+	mov al,0b;所有行置零
 	out dx,al
 	call delay
 	in al,dx
-	and al,00001111b
+	and al,00001111b;判断列值是否为全1
 	cmp al,00001111b
 	jz readc_1
 	call delay
+
+	;找到循环行列值
+	;al的高四位是行，低四位是列
 	mov cx,4
 	mov ah,11100000b
 readc_2:
@@ -30,6 +34,7 @@ readc_2:
 	loop readc_2
 	jmp readc_1
 
+	;查表找出字符
 readc_3:
 	mov si,offset ttable
 	mov di,offset char
@@ -42,6 +47,8 @@ readc_4:
 	inc di
 	loop readc_4
 	jmp readc_1
+
+	;将字符保存在al并且回显
 readc_5:
 	mov al,[di]
 	call dispc

@@ -32,11 +32,11 @@ include io.inc
 	include data_music.asm
 	;闹钟数据
 	include data_alarm.asm
-	;
+	;键盘数据
 	include data_keyboard.asm
-	;
+	;数码管数据
 	include data_led.asm
-	;
+	;计时器功能的数据
 	include data_fun_a.asm
 .code
 start: mov ax,@data
@@ -80,14 +80,16 @@ start: mov ax,@data
 	;设置8255并行端口控制字
 	mov dx,pcontroller
 	mov al,10000001b
-	;A端口：用于位控制
-	;B端口：用于
+	;A端口：pa4~7用于数码管位码，pa0~1用于扬声器控制
+	;B端口：用于数码管段码
 	;C端口：用于读取简易键盘
 	out dx,al
 	
+	;输出提示信息
 	mov ax,offset fun_chooser_msg
 	call dispmsg
 main_again:
+	;显示十次当前时间
 	mov cx,10
 main_time:
 	call readkey_my
@@ -112,6 +114,7 @@ disp_time:
 continue_disp:	
 	loop main_time
 
+	;显示10次当前日期
 	mov cx,10
 main_date:
 	call readkey_my
@@ -157,9 +160,9 @@ main_done:
 	include fun_c.asm
 	;主程序时间显示
 	include fun_clock.asm
-	;
+	;数码管显示控制
 	include show_time.asm
-;延时子程序
+;延时子程序（长）
 delay proc
 	push cx
 	push bx
@@ -174,7 +177,7 @@ delay2:
 	ret
 delay endp
 
-;延时子程序
+;延时子程序（短）
 delay_clock proc
 	push cx
 	xor cx,cx
@@ -185,6 +188,7 @@ delay_clock1:
 delay_clock endp
 
 ;判断现在是否是闹钟时间
+;出口参数zf，zf为0表示是闹钟时间，否则不是
 has_alarm proc
 	push ax
 	push bx
@@ -195,6 +199,7 @@ has_alarm proc
 	;如果不相同就退出，zf=1
 	jnz has_alarm_done
 
+	;从cmos中获取当前的小时
 	xor ax,ax
 	mov al,4
     out 70h,al
@@ -205,6 +210,7 @@ has_alarm proc
 	mov bl,10	;al扩大十倍
 	mul bl
 	add al,bh	;al相加得到原十进制数字
+	;判断的结果影响zf，作为返回结果
 	cmp al,alarm_hour
 
 has_alarm_done:
