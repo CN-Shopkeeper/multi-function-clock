@@ -25,11 +25,11 @@ include io.inc
 	;数字输入错误
 	readnum_input_error_msg byte 13,10,"please input a number between 0 and 9!",13,10,0
 	;功能选择器提示
-	fun_chooser_msg byte 13,10,30 dup('*'),13,10
+	fun_chooser_msg byte 13,10,35 dup('*'),13,10
 		byte "*    press A to set counter!    *",13,10
 		byte "*    press B to set alarm!      *",13,10
 		byte "*    press C to set music!      *",13,10
-		byte 13,10,30 dup('*'),13,10,0
+		byte 35 dup('*'),13,10,0
 	;音乐数据
 	include data_music.asm
 	;闹钟数据
@@ -62,6 +62,19 @@ start: mov ax,@data
 	out 21h,al
 	sti
 
+
+	;初始化时钟的小时
+	xor ax,ax
+    mov al,4
+    out 70h,al
+    in al,71h
+    mov bl,16
+    div bl
+	mov bh,ah
+	mov bl,10
+	mul bl
+	add al,bh
+	mov clock_hour,al
 	;初始化时钟的分钟
 	xor ax,ax
     mov al,2
