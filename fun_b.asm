@@ -24,7 +24,7 @@ fun_b_begin:
 msg_no_alarm:
 	mov ax,offset no_alarm_msg
 	call dispmsg
-fun_b_chooser:	
+fun_b_chooser:
 	;输入分支选择
 	call readc_my
 	cmp al,'A'
