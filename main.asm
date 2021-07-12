@@ -14,6 +14,8 @@ include io.inc
 	countercontroller=283h
 	now_time word ?
 	count_flag byte 0	;记录状态信息，0表示无操作，1表示正计时状态，2表示倒计时状态
+	;时钟时间的小时
+	clock_hour byte ?
 	;时钟时间的分钟
 	clock_minu byte ?
 	;时钟时间的秒
