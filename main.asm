@@ -104,6 +104,17 @@ start: mov ax,@data
 	mov ax,offset fun_chooser_msg
 	call dispmsg
 main_again:
+	mov al,clock_hour
+	call dispuib
+	mov al,':'
+	call dispc
+	mov al,clock_minu
+	call dispuib
+	mov al,':'
+	call dispc
+	mov al,clock_sec
+	call dispuib
+	call dispcrlf
 	call delay
 	;显示十次当前时间
 	mov cx,10
