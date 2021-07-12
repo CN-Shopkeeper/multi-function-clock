@@ -15,7 +15,7 @@ readkey_my proc
 	and al,00001111b
 	cmp al,00001111b
 	jz readkey_nothing
-	call delay
+	call delay_clock
 	mov cx,4
 	mov ah,11100000b
 readkey_2:
@@ -46,7 +46,7 @@ readkey_4:
 readkey_5:
 	mov al,[di]
 	call dispc
-	call delay
+	call delay_clock
 	jmp readkey_done
 readkey_nothing:
 	cmp al,0	;zf=0

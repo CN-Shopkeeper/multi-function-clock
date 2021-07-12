@@ -10,7 +10,7 @@ readc_1:
 	mov dx,pc
 	mov al,0b;所有行置零
 	out dx,al
-	call delay_clock
+	call delay
 	in al,dx
 	and al,00001111b;判断列值是否为全1
 	cmp al,00001111b
@@ -25,7 +25,7 @@ readc_2:
 	mov al,ah
 	out dx,al
 	in al,dx
-	call delay_clock
+	call delay
 	and al,00001111b
 	cmp al,00001111b
 	jnz readc_3

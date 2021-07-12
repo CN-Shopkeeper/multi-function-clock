@@ -10,6 +10,8 @@ test_music:
 	call dispmsg
 	;输入要预览的铃声
 	call readc_my
+	cmp al,'F'
+	jz fun_c_done
 	cmp al,'0'
 	jz test_music_0
 	cmp al,'1'
@@ -74,12 +76,10 @@ again_birthday:
 	add si,2
 	call speaker
 	call speakon
+play_birthday_again:
 	;如果有键盘输入就退出播放
 	call readkey_my
 	jz done_birthday
-play_birthday_again:
-	;延时
-	call delay_clock
 	loop play_birthday_again
 	sub bx,1
     jnz again_birthday
@@ -109,12 +109,10 @@ again_blackteam:
 	add si,2
 	call speaker
 	call speakon
+play_blackteam_again:
 	;如果有键盘输入就退出播放
 	call readkey_my
 	jz done_birthday
-play_blackteam_again:
-	;延时
-	call delay_clock
 	loop play_blackteam_again
 	sub bx,1
     jnz again_blackteam
@@ -144,12 +142,10 @@ again_sky:
 	add si,2
 	call speaker
 	call speakon
+play_sky_again:
 	;如果有键盘输入就退出播放
 	call readkey_my
 	jz done_birthday
-play_sky_again:
-	;延时
-	call delay_clock
 	loop play_sky_again
 	sub bx,1
     jnz again_sky
