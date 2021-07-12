@@ -1,5 +1,8 @@
 ;预览音乐的提示
-test_music_msg byte 13,10,"input 0 to test music birthday",13,10,"input 1 to test music blackteam",13,10,"input 2 to test music sky",13,10,0
+test_music_msg byte 13,10,"input 0 to test music birthday",13,10
+	byte "input 1 to test music blackteam",13,10
+	byte "input 2 to test music sky",13,10
+	byte "input F to quit",13,10,0
 ;提示是否使用这个音乐
 confirm_music_msg byte 13,10,"use this music? YES(A)/NO(B)",0,10,10
 ;提示音乐设置成功
